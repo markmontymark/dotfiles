@@ -1,0 +1,12 @@
+dfind(){
+   find . -type f -exec grep $1 {} \; -ls
+}
+psisrunning(){
+   ps -eaf |grep $1 | grep -v grep
+}
+
+setgithub(){
+        git config --global user.name markmontymark
+        git config --global user.email "markmontymark@yahoo.com"
+}
+

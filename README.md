@@ -1,4 +1,4 @@
-env
+dotfiles
 ===
 
-Home directory rc scripts, vimrc files, and what not
+Mostly Bash and Vim setup scripts

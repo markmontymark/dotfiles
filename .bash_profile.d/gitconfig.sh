@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+
+
 github() 
 {
 	git config --global user.name "Mark Koopman"

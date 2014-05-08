@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 ## adding `go install` binaries to path
 export GOPATH=$HOME/Desktop/go
 

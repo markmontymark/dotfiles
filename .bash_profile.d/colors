@@ -1,0 +1,4 @@
+#turn on pretty colors in Terminal
+
+export CLICOLOR=1
+export LSCOLORS=GxFxCxDxBxegedabagaced

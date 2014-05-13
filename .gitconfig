@@ -1,0 +1,13 @@
+[user]
+	name = Mark Koopman
+	email = markmontymark@yahoo.com
+[alias]
+	c = commit
+	m = merge
+	f = fetch
+	s = status
+	p = push
+	d = diff
+	a = add
+[push]
+	default = simple

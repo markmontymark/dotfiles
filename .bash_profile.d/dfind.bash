@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-dfind(d){
+dfind(){
    find . -type f -exec grep $1 {} \; -ls
 }

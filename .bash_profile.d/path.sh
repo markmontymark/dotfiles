@@ -9,3 +9,4 @@ export PATH=$HOME/bin:$GOPATH/bin:$PATH
 #adding bins from MacPorts
 export PATH=/opt/local/bin:/opt/local/sbin:$PATH
 
+export PATH=~/.cabal/bin:$PATH

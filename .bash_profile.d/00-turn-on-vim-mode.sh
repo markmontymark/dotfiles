@@ -12,4 +12,4 @@ turn_off_vi(){
 	set show-mode-in-prompt off
 }
 
-turn_on_vi
+turn_off_vi

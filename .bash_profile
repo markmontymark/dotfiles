@@ -6,4 +6,3 @@ done
 # MacPorts Installer addition
 export PATH=/opt/local/bin:/opt/local/sbin:$PATH
 # Finished MacPorts changes
-

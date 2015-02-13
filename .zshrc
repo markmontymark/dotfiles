@@ -46,7 +46,7 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git osx tmux npm node wd sudo)
+plugins=(git osx npm node wd sudo last-working-dir) #vi-mode)
 
 # User configuration
 
@@ -80,26 +80,49 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+# env {{{
+
+source $(brew --prefix nvm)/nvm.sh
+
+export CLOJURESCRIPT_HOME=/Users/yeahright/Desktop/github/clojurescript
+export PATH=$CLOJURESCRIPT_HOME/bin:$PATH
+export PATH=$CLOJURESCRIPT_HOME/script:$PATH
+# }}}
+
+
+
 # aliases {{{
 
+alias ct='ctags -R --exclude=.git'
 alias lt='ls -lart'
 alias ll='ls -l'
 alias l='ls'
 alias v='vi'
+alias iv='vi'
 alias dog='pygmentize -g'
 alias airport='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport'
 
 # }}}
 
-# adobe {{{
 
-export WWW=/var/www
-alias www='cd $WWW'
-
-# }}}
+github()
+{
+	git config --global user.name "MarkMontyMark"
+	git config --global user.email "yeahright"
+}
 
 # functions {{{
 startaudio(){
   jackd -d coreaudio &
 }
+new_ssh_key(){
+  ssh-keygen -t rsa -C "$1"
+}
+pag() {
+  ps -eaf | ag $1
+}
+jshintag(){
+  ag $1 /usr/local/lib/node_modules/jshint/src/messages.js
+}
+
 # }}}

@@ -1,4 +1,4 @@
-let mapleader = ","
+let g:mapleader = ","
 
 "NeoBundle Scripts {{{
 if has('vim_starting')
@@ -18,11 +18,12 @@ call neobundle#begin(expand('~/.vim/bundle'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
 " Add or remove your Bundles here:
-NeoBundle 'Shougo/neosnippet.vim'
-NeoBundle 'Shougo/neosnippet-snippets'
-NeoBundle 'Shougo/vimproc.vim'
-NeoBundle 'Shougo/vimshell.vim'
-NeoBundle 'Shougo/unite.vim'
+"NeoBundle 'Shougo/neosnippet.vim'
+"NeoBundle 'Shougo/neosnippet-snippets'
+"NeoBundle 'Shougo/vimproc.vim'
+"NeoBundle 'Shougo/vimshell.vim'
+"NeoBundle 'Shougo/unite.vim'
+NeoBundle 'tpope/vim-obsession'
 NeoBundle 'tpope/vim-classpath'
 NeoBundle 'tpope/vim-dispatch'
 NeoBundle 'tpope/vim-fireplace'
@@ -41,17 +42,28 @@ NeoBundle 'guns/vim-clojure-static'
 NeoBundle 'rking/ag.vim'
 "NeoBundlelugi""""n 'mileszs/ack.vim'
 NeoBundle 'XadillaX/json-formatter.vim'
-NeoBundle 'vim-scripts/Superior-Haskell-Interaction-Mode-SHIM.git'
-NeoBundle 'Shougo/neocomplete.vim'
+"NeoBundle 'vim-scripts/Superior-Haskell-Interaction-Mode-SHIM.git'
+"NeoBundle 'Shougo/neocomplete.vim'
 NeoBundle 'bling/vim-airline'
 "NeoBundlelugin 'altercation/vim-colors-solarized'
 NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'airblade/vim-gitgutter'
 NeoBundle 'vim-scripts/taglist.vim'
 NeoBundle 'godlygeek/tabular.git'
-NeoBundle 'vim-scripts/snipMate'
+"NeoBundle 'vim-scripts/snipMate'
 " You can specify revision/branch/tag.
-NeoBundle 'Shougo/vimshell', { 'rev' : '3787e5' }
+"NeoBundle 'Shougo/vimshell', { 'rev' : '3787e5' }
+"NeoBundle 'idanarye/vim-vebugger'
+NeoBundle 'ervandew/supertab'
+NeoBundle 'moll/vim-node'
+NeoBundle 'rdio/jsfmt'
+NeoBundle 'mephux/vim-jsfmt'
+
+NeoBundle 'kien/rainbow_parentheses.vim'
+NeoBundle 'guns/vim-sexp'
+NeoBundle 'tpope/vim-sexp-mappings-for-regular-people'
+NeoBundle 'gregsexton/MatchTag'
+NeoBundle 'gregsexton/gitv'
 
 " Required:
 call neobundle#end()
@@ -164,7 +176,7 @@ set shiftwidth=2
 set number
 
 " Highlight tailing whitespace
-set list listchars=tab:\ \ ,trail:·
+"set list listchars=tab:\ \ ,trail:·
 
 " Get rid of the delay when pressing O (for example)
 " http://stackoverflow.com/questions/2158516/vim-delay-before-o-opens-a-new-line
@@ -319,10 +331,10 @@ highlight clear SignColumn
 "map <leader>' :NERDTreeToggle<cr>
 
 " Tabularize
-map <Leader>e :Tabularize /=<cr>
-map <Leader>c :Tabularize /:<cr>
-map <Leader>es :Tabularize /=\zs<cr>
-map <Leader>cs :Tabularize /:\zs<cr>
+"map <Leader>e :Tabularize /=<cr>
+"map <Leader>c :Tabularize /:<cr>
+"map <Leader>es :Tabularize /=\zs<cr>
+"map <Leader>cs :Tabularize /:\zs<cr>
 
 
 " Camel Case Motion (for dealing with programming code)
@@ -394,6 +406,7 @@ map <leader>w[ <C-W>= " equalize all windows
 
 " visually select, then url encode or decode.
 vnoremap <leader>% :!~/bin/url-encode-decode<cr>
+vnoremap <leader>6 :!base64<cr>
 
 " Running Tests...
 " See also <https://gist.github.com/8114940>
@@ -564,26 +577,26 @@ inoremap <esc> <nop>
  let g:neocomplete#sources#syntax#min_keyword_length = 3
 
  " Plugin key-mappings.
- inoremap <expr><C-g>     neocomplete#undo_completion()
- inoremap <expr><C-l>     neocomplete#complete_common_string()
+" inoremap <expr><C-g>     neocomplete#undo_completion()
+" inoremap <expr><C-l>     neocomplete#complete_common_string()
 
  " Recommended key-mappings.
  " <CR>: close popup and save indent.
- inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
  function! s:my_cr_function()
-     return neocomplete#close_popup() . "\<CR>"
+     return neocomplete#smart_close_popup() . "\<CR>"
  endfunction
+ "inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
  " <TAB>: completion.
- inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+ "0inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
  " <C-h>, <BS>: close popup and delete backword char.
- inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
- inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
- inoremap <expr><C-y>  neocomplete#close_popup()
- inoremap <expr><C-e>  neocomplete#cancel_popup()
+ "0inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+ "0inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+ "0inoremap <expr><C-y>  neocomplete#close_popup()
+ "0inoremap <expr><C-e>  neocomplete#cancel_popup()
 
  " }}}
 
-set so=7
+set scrolloff=7
 
 set magic
 set lazyredraw
@@ -592,19 +605,159 @@ set nowb
 set noswapfile
 
 " Specify the behavior when switching between buffers
-try
-  set switchbuf=useopen,usetab,newtab
-  set stal=2
-catch
-endtry
+"try
+"  set switchbuf=useopen,usetab,newtab
+"  set stal=2
+"catch
+"endtry
 
 "nnoremap <Leader><Leader> :e .<CR><C-W>h<C-W>s :Tlist<CR><C-W>l:let g:netrw_chgwin=winnr()<CR><C-W>h
 
 "og
-nnoremap <Leader><Leader> :Tlist<CR><C-W>h<C-W>s:e .<CR><C-W>l:let g:netrw_chgwin=winnr()<CR><C-W>h
+"nnoremap <Leader><Leader> :Tlist<CR><C-W>h<C-W>s:e .<CR><C-W>l:let g:netrw_chgwin=winnr()<CR><C-W>h
+"nnoremap <Leader><Leader> <c-w>25v:e .<CR><c-w>h<c-w>r<C-W>l:let g:netrw_chgwin=winnr()<CR><C-W>l
+
+" start from http://stackoverflow.com/a/5636941/766921
+" Toggle Vexplore with <leader><leader>
+function! ToggleVExplorer()
+  if exists("t:expl_buf_num")
+      let expl_win_num = bufwinnr(t:expl_buf_num)
+      if expl_win_num != -1
+          let cur_win_nr = winnr()
+          exec expl_win_num . 'wincmd w'
+          close
+          exec cur_win_nr . 'wincmd w'
+          unlet t:expl_buf_num
+      else
+          unlet t:expl_buf_num
+      endif
+  else
+      exec '1wincmd w'
+      25Vexplore
+      let t:expl_buf_num = bufnr("%")
+  endif
+endfunction
+map <silent> <leader><leader> :call ToggleVExplorer()<CR>
+
+" Hit enter in the file browser to open the selected
+" file with :vsplit to the right of the browser.
+let g:netrw_browse_split = 4
+let g:netrw_altv = 1
+" end from http://stackoverflow.com/a/5636941/766921
 
 "
 "let g:netrw_altv = &spr
 " let g:netrw_winsize = 80
 " Netrw Style Listing
-let g:netrw_liststyle = 3
+"let g:netrw_liststyle = 3
+
+" fns {{{
+"TODO
+" add #names for autoloading
+" this function is lifted from Learn Vimscript the Hard Way
+" http://learnvimscriptthehardway.stevelosh.com
+
+let g:quickfix_is_open = 0
+
+function! QuickfixToggle()
+  if g:quickfix_is_open
+    cclose
+    let g:quickfix_is_open = 0
+    execute g:quickfix_return_to_window . "wincmd w"
+  else
+    let g:quickfix_return_to_window = winnr()
+    copen
+    let g:quickfix_is_open = 1
+  endif
+endfunction
+
+
+
+function! FoldColumnToggle()
+  if &foldcolumn
+    setlocal foldcolumn=0
+  else
+    setlocal foldcolumn=4
+  endif
+endfunction
+"nnoremap <leader>z :call FoldColumnToggle()<cr>
+"
+" this function is lifted from Learn Vimscript the Hard Way
+" http://learnvimscriptthehardway.stevelosh.com
+
+nnoremap <leader>g :set operatorfunc=<SID>GrepOperator<cr>g@
+vnoremap <leader>g :<c-u>call <SID>GrepOperator(visualmode())<cr>
+
+function! s:GrepOperator(type)
+  let saved_unnamed_register = @@
+  if a:type ==# 'v'
+    normal! `<v`>y
+  elseif a:type ==# 'char'
+    normal! `[v`]y
+  else
+    return
+  endif
+  echo shellescape(@@)
+  sleep 1
+  silent execute "grep! -R " . shellescape(@@)
+  redraw!
+  copen
+  let @@ = saved_unnamed_register
+endfunction
+
+"" Tab completion
+function! Inserttabwrapper()
+    let col = col('.') - 1
+    if !col || getline('.')[col - 1] !~ '\k'
+        return "\<tab>"
+    else
+        return "\<c-p>"
+    endif
+endfunction
+
+" Map <tab> to Inserttabwarpper()
+inoremap <tab> <c-r>=Inserttabwrapper()<cr>
+
+" Shift tab to backwards search
+inoremap <s-tab> <c-n>
+
+" Remap 0 to first non-blank character
+nnoremap 0 ^
+
+" Remap ^ to first column
+nnoremap ^ 0
+
+" Treat long lines as break lines
+map k gk
+map j gj
+
+" Toggle paste mode on and off
+map <leader>pp :setlocal paste!<cr>
+
+" Disable paste mode when leaving insert mode
+autocmd InsertLeave * set nopaste
+
+" Turn backup off
+set noswapfile
+set nobackup
+set nowritebackup
+
+" Keep undo history across sessions, by storing in file.
+silent !mkdir ~/.vim/backups > /dev/null 2>&1
+set undodir=~/.vim/backups
+set undofile
+
+
+" Will insert tab at beginning of line, will use completion if not at beginning
+set wildmode=list:longest,list:full
+
+" Stuff to ignore when tab completing
+set wildignore=*.o,*.obj,*~,*.pyc
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*.
+set wildignore+=*vim/backups*
+set wildignore+=*DS_Store*
+set wildignore+=*.png,*.jpg,*.gif
+
+
+
+"}}}

@@ -64,6 +64,9 @@ NeoBundle 'guns/vim-sexp'
 NeoBundle 'tpope/vim-sexp-mappings-for-regular-people'
 NeoBundle 'gregsexton/MatchTag'
 NeoBundle 'gregsexton/gitv'
+NeoBundle 'janko-m/vim-test.git'
+NeoBundle 'benmills/vimux'
+
 
 " Required:
 call neobundle#end()
@@ -758,6 +761,26 @@ set wildignore+=*vim/backups*
 set wildignore+=*DS_Store*
 set wildignore+=*.png,*.jpg,*.gif
 
-
+" from http://vim.wikia.com/wiki/HTML_entities
+" Escape/unescape & < > HTML entities in range (default current line).
+function! HtmlEntities(line1, line2, action)
+  let search = @/
+  let range = 'silent ' . a:line1 . ',' . a:line2
+  if a:action == 0  " must convert &amp; last
+    execute range . 'sno/&lt;/</eg'
+    execute range . 'sno/&gt;/>/eg'
+    execute range . 'sno/&amp;/&/eg'
+  else              " must convert & first
+    execute range . 'sno/&/&amp;/eg'
+    execute range . 'sno/</&lt;/eg'
+    execute range . 'sno/>/&gt;/eg'
+  endif
+  nohl
+  let @/ = search
+endfunction
+command! -range Htmldecode call HtmlEntities(<line1>, <line2>, 0)
+command! -range Htmlencode call HtmlEntities(<line1>, <line2>, 1)
+"noremap <silent> <leader>h :Entities 0<CR>
+"noremap <silent> \H :Entities 1<CR>
 
 "}}}

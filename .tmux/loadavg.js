@@ -18,7 +18,7 @@ topCmd.stdout.on('data',function(data){
   var bspacer = '#[fg=black,bg=' + color +']◀';
   console.log(
     fspacer +
-    '#[fg=white,bg=' + color +']'+
+    '#[fg=colour253,bg=' + color +']'+
     ' load ' + loadAvg.split(',')[0] +
     ' ' + bspacer
   );

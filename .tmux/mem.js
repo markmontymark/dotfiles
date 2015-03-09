@@ -20,12 +20,13 @@ topCmd.stdout.on('data',function(data){
     memUnused = memUnused.charAt(0) + 'g';
   }
   var color = (parseInt(memUnused,10) < 2000) ?
-    'colour64' : 'red';
+    'colour64' : (parseInt(memUnused,10) < 10000) ?
+    'colour9' : 'red';
   var fspacer = '#[fg=' + color +',bg=black]◀';
   var bspacer = '#[fg=black,bg=' + color +']◀';
   console.log(
     fspacer +
-    '#[fg=white,bg=' + color +']'+
+    '#[fg=colour253,bg=' + color +']'+
     ' mem ' + memUsed + '/' + memUnused +
     ' ' + bspacer
   );

@@ -87,6 +87,7 @@ source $(brew --prefix nvm)/nvm.sh
 export CLOJURESCRIPT_HOME=/Users/yeahright/Desktop/github/clojurescript
 export PATH=$CLOJURESCRIPT_HOME/bin:$PATH
 export PATH=$CLOJURESCRIPT_HOME/script:$PATH
+export GOPATH=~/Desktop/go
 # }}}
 
 
@@ -101,25 +102,41 @@ alias v='vi'
 alias iv='vi'
 alias dog='pygmentize -g'
 alias airport='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport'
-
+alias ff-safe-mode='/Applications/FirefoxDeveloperEdition.app/Contents/MacOS/firefox -safe-mode'
+alias ff='/Applications/FirefoxDeveloperEdition.app/Contents/MacOS/firefox'
 # }}}
 
+# uhhuh {{{
+
+uhhuhgithub() {
+	git config --global user.name ""
+	git config --global user.email "yeahright@uhhuh.com"
+}
 
 github()
 {
-	git config --global user.name "MarkMontyMark"
-	git config --global user.email "yeahright"
+	git config --global user.name ""
+	git config --global user.email "@.com"
 }
+export WWW=/var/www
+
+
+# }}}
 
 # functions {{{
 startaudio(){
   jackd -d coreaudio &
 }
 new_ssh_key(){
-  ssh-keygen -t rsa -C "$1"
+  ssh-keygen -t rsa -C "yeahright@uhhuh.com"
 }
 pag() {
-  ps -eaf | ag $1
+  if [[ "$1" != "" ]] then
+    ps -eaf | ag $1
+  else
+    ps -eaf
+  fi
+
 }
 jshintag(){
   ag $1 /usr/local/lib/node_modules/jshint/src/messages.js

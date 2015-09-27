@@ -18,11 +18,7 @@ call neobundle#begin(expand('~/.vim/bundle'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 
 " Add or remove your Bundles here:
-"NeoBundle 'Shougo/neosnippet.vim'
-"NeoBundle 'Shougo/neosnippet-snippets'
-"NeoBundle 'Shougo/vimproc.vim'
-"NeoBundle 'Shougo/vimshell.vim'
-"NeoBundle 'Shougo/unite.vim'
+NeoBundle 'tpope/vim-abolish'
 NeoBundle 'tpope/vim-obsession'
 NeoBundle 'tpope/vim-classpath'
 NeoBundle 'tpope/vim-dispatch'
@@ -30,35 +26,25 @@ NeoBundle 'tpope/vim-fireplace'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-tbone'
 NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'tpope/vim-projectionist'
+NeoBundle 'machakann/vim-sandwich'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'kchmck/vim-coffee-script'
 NeoBundle 'elzr/vim-json'
 NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'fatih/vim-go'
 NeoBundle 'groenewege/vim-less'
-"NeoBundlelugin 'marijnh/tern_for_vim'
-"NeoBundle"ugin 'vim-scripts/jsbeautify'
 NeoBundle 'guns/vim-clojure-static'
 NeoBundle 'rking/ag.vim'
-"NeoBundlelugi""""n 'mileszs/ack.vim'
 NeoBundle 'XadillaX/json-formatter.vim'
-"NeoBundle 'vim-scripts/Superior-Haskell-Interaction-Mode-SHIM.git'
-"NeoBundle 'Shougo/neocomplete.vim'
 NeoBundle 'bling/vim-airline'
-"NeoBundlelugin 'altercation/vim-colors-solarized'
 NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'airblade/vim-gitgutter'
 NeoBundle 'vim-scripts/taglist.vim'
 NeoBundle 'godlygeek/tabular.git'
-"NeoBundle 'vim-scripts/snipMate'
-" You can specify revision/branch/tag.
-"NeoBundle 'Shougo/vimshell', { 'rev' : '3787e5' }
-"NeoBundle 'idanarye/vim-vebugger'
-NeoBundle 'ervandew/supertab'
 NeoBundle 'moll/vim-node'
 NeoBundle 'rdio/jsfmt'
 NeoBundle 'mephux/vim-jsfmt'
-
 NeoBundle 'kien/rainbow_parentheses.vim'
 NeoBundle 'guns/vim-sexp'
 NeoBundle 'tpope/vim-sexp-mappings-for-regular-people'
@@ -66,6 +52,9 @@ NeoBundle 'gregsexton/MatchTag'
 NeoBundle 'gregsexton/gitv'
 NeoBundle 'janko-m/vim-test.git'
 NeoBundle 'benmills/vimux'
+"NeoBundlelugin 'marijnh/tern_for_vim'
+"NeoBundle"ugin 'vim-scripts/jsbeautify'
+"NeoBundle 'vim-scripts/Superior-Haskell-Interaction-Mode-SHIM.git'
 
 
 " Required:
@@ -78,47 +67,6 @@ filetype plugin indent on
 " this will conveniently prompt you to install them.
 NeoBundleCheck
 "}}}
-
-" Vundle {{{
-" set rtp+=~/.vim/bundle/Vundle.vim
-" call vundle#begin()
-
-"Plugin 'tpope/vim-classpath'
-"Plugin 'tpope/vim-dispatch'
-"Plugin 'tpope/vim-fireplace'
-"Plugin 'tpope/vim-surround'
-"Plugin 'tpope/vim-tbone'
-"Plugin 'tpope/vim-fugitive'
-"Plugin 'scrooloose/syntastic'
-"Plugin 'kchmck/vim-coffee-script'
-"Plugin 'elzr/vim-json'
-"Plugin 'pangloss/vim-javascript'
-"Plugin 'fatih/vim-go'
-"Plugin 'groenewege/vim-less'
-""""""Plugin 'marijnh/tern_for_vim'
-""Pl""""ugin 'vim-scripts/jsbeautify'
-"Plugin 'guns/vim-clojure-static'
-"Plugin 'rking/ag.vim'
-""""""Plugi""""n 'mileszs/ack.vim'
-"Plugin 'XadillaX/json-formatter.vim'
-"Plugin 'vim-scripts/Superior-Haskell-Interaction-Mode-SHIM.git'
-"Plugin 'Shougo/vimproc.vim'
-"Plugin 'Shougo/vimshell.vim'
-"Plugin 'Shougo/unite.vim'
-"Plugin 'Shougo/neocomplete.vim'
-"Plugin 'bling/vim-airline'
-""""""Plugin 'altercation/vim-colors-solarized'
-"Plugin 'kien/ctrlp.vim'
-"Plugin 'airblade/vim-gitgutter'
-"Plugin 'scrooloose/nerdtree'
-""""""Plugin 'bling/vim-bufferline'
-""""""Plugin 'edkolev/tmuxline.vim'
-" All of your Plugins
-" must be added before
-" the following line
-"""""call vundle#end()
-" required
-" }}}
 
 " Settings {{{
 " Switch syntax highlighting on, when the terminal has colors
@@ -267,6 +215,17 @@ colorscheme molokai
 "" CtrlP -> directories to ignore when fuzzy finding
 "let g:ctrlp_custom_ignore = '\v[\/]((node_modules)|\.(git|svn|grunt|sass-cache))$'
 "
+"
+let g:ctrlp_use_caching = 0
+if executable('ag')
+  set grepprg=ag\ --nogroup\ --nocolor
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+else
+  let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
+  let g:ctrlp_prompt_mappings = {
+        \ 'AcceptSelection("e")': ['<space>', '<cr>', '<2-LeftMouse>'],
+        \ }
+endif
 " Ack (uses Ag behind the scenes)
 let g:ackprg = 'ag --nogroup --nocolor --column'
 let g:grepprg = 'ag --nogroup --nocolor --column'
@@ -373,13 +332,14 @@ iabbrev amddef "use strict";<cr>/*global define*/
 
 iabbrev ccopy Copyright 2014 Me, All Rights Reserved.
 
-iabbrev meee "use strict";<CR><CR>module.exports = ;<CR><CR>
+iabbrev cxl console.log('
+iabbrev meee 'use strict';<CR><CR>module.exports = ;<CR><CR>
 iabbrev fnctor /*jshint validthis:true*/<CR>if(this.constructor !== ){<CR>return new ();<CR>}<CR>
 iabbrev forlist for(var i=0,len=.length; i < len; i++){
 iabbrev varreq var  = require('');
 iabbrev ifnoargs if(arguments.length === 0){<CR>
-iabbrev fxn function
-iabbrev starthtml <!DOCTYPE html><cr><html><cr><head><cr><meta charset="utf8"/><cr><title>title</title><cr></head><cr><body><cr><cr></body><cr></html>
+iabbrev fxn function (){
+iabbrev hxl <!DOCTYPE html><cr><html><cr><head><cr><meta charset="utf8"/><cr><title>title</title><cr></head><cr><body><cr><cr></body><cr></html>
 
 " Clear search buffer
 :nnoremap § :nohlsearch<cr>
@@ -409,8 +369,9 @@ map <leader>w[ <C-W>= " equalize all windows
 
 " visually select, then url encode or decode.
 vnoremap <leader>% :!~/bin/url-encode-decode<cr>
-vnoremap <leader>6 :!base64<cr>
+vnoremap <leader>5 :!base64<cr>
 
+nnoremap <leader>zz lve~w
 " Running Tests...
 " See also <https://gist.github.com/8114940>
 
@@ -538,87 +499,25 @@ hi Visual cterm=None ctermfg=255 ctermbg=68
 hi SignColumn ctermbg=black
 " }}}
 
-" my mappings {{{
-nnoremap <leader>f :call QuickfixToggle()<cr>
-nnoremap <leader>w :w!<cr>
-nnoremap <leader>q :q<cr>
-nnoremap <leader>Q :q!<cr>
-nnoremap <leader>x :x<cr>
+" vim.wikia stuff {{{
 
-nnoremap <leader>l :ls<cr>
-nnoremap <leader>d :bd<cr>
-nnoremap <leader>b :bnext<cr>
-nnoremap <leader>B :bprevious<cr>
-nnoremap <leader>c yyp
-nnoremap <leader>e :lnext<cr>
-nnoremap <leader>E :lprev<cr>
-nnoremap <leader>r maywggovar <esc>pa = require('<esc>pa');<esc>`a
-nnoremap <leader>, :cnext<cr>
-nnoremap <leader>. :cprevious<cr>
 
-vnoremap <leader>% :!~/bin/url-encode-decode<cr>
+" search and replace in all open buffers
+" from " http://vim.wikia.com/wiki/Search_and_replace_in_multiple_buffers
+"
+"  :bufdo %s/pattern/replace/ge | update
+"
+" Explanation
+" bufdo     Apply the following commands to all buffers.
+" %         Search and replace all lines in the buffer.
+" s         Do substitution
+" pattern   Search pattern.
+" replace   Replacement text.
+" g         Change all occurrences in each line (global).
+" e         No error if the pattern is not found.
+" |         Separator between commands.
+" update    Save (write file only if changes were made).
 
-" move around splits
-nnoremap <leader>h <C-W>h
-nnoremap <leader>j <C-W>j
-nnoremap <leader>k <C-W>k
-nnoremap <leader>l <C-W>l
-
-inoremap jk <esc>
-inoremap <esc> <nop>
-
-" }}}
-
-" https://gist.github.com/cridenour/74e7635275331d5afa6b {{{
- " Disable AutoComplPop.
- let g:acp_enableAtStartup = 0
- " Use neocomplete.
- let g:neocomplete#enable_at_startup = 1
- " Use smartcase.
- let g:neocomplete#enable_smart_case = 1
- " Set minimum syntax keyword length.
- let g:neocomplete#sources#syntax#min_keyword_length = 3
-
- " Plugin key-mappings.
-" inoremap <expr><C-g>     neocomplete#undo_completion()
-" inoremap <expr><C-l>     neocomplete#complete_common_string()
-
- " Recommended key-mappings.
- " <CR>: close popup and save indent.
- function! s:my_cr_function()
-     return neocomplete#smart_close_popup() . "\<CR>"
- endfunction
- "inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
- " <TAB>: completion.
- "0inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
- " <C-h>, <BS>: close popup and delete backword char.
- "0inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
- "0inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
- "0inoremap <expr><C-y>  neocomplete#close_popup()
- "0inoremap <expr><C-e>  neocomplete#cancel_popup()
-
- " }}}
-
-set scrolloff=7
-
-set magic
-set lazyredraw
-set nobackup
-set nowb
-set noswapfile
-
-" Specify the behavior when switching between buffers
-"try
-"  set switchbuf=useopen,usetab,newtab
-"  set stal=2
-"catch
-"endtry
-
-"nnoremap <Leader><Leader> :e .<CR><C-W>h<C-W>s :Tlist<CR><C-W>l:let g:netrw_chgwin=winnr()<CR><C-W>h
-
-"og
-"nnoremap <Leader><Leader> :Tlist<CR><C-W>h<C-W>s:e .<CR><C-W>l:let g:netrw_chgwin=winnr()<CR><C-W>h
-"nnoremap <Leader><Leader> <c-w>25v:e .<CR><c-w>h<c-w>r<C-W>l:let g:netrw_chgwin=winnr()<CR><C-W>l
 
 " start from http://stackoverflow.com/a/5636941/766921
 " Toggle Vexplore with <leader><leader>
@@ -642,17 +541,149 @@ function! ToggleVExplorer()
 endfunction
 map <silent> <leader><leader> :call ToggleVExplorer()<CR>
 
-" Hit enter in the file browser to open the selected
-" file with :vsplit to the right of the browser.
-let g:netrw_browse_split = 4
-let g:netrw_altv = 1
-" end from http://stackoverflow.com/a/5636941/766921
 
+
+" here is a more exotic version of my original Kwbd script
+""delete the buffer; keep windows; create a scratch buffer if no buffers left
+" SOURCE http://vim.wikia.com/wiki/Deleting_a_buffer_without_closing_the_window
+function s:Kwbd(kwbdStage)
+  if(a:kwbdStage == 1)
+    if(!buflisted(winbufnr(0)))
+      bd!
+      return
+    endif
+    let s:kwbdBufNum = bufnr("%")
+    let s:kwbdWinNum = winnr()
+    windo call s:Kwbd(2)
+    execute s:kwbdWinNum . 'wincmd w'
+    let s:buflistedLeft = 0
+    let s:bufFinalJump = 0
+    let l:nBufs = bufnr("$")
+    let l:i = 1
+    while(l:i <= l:nBufs)
+      if(l:i != s:kwbdBufNum)
+        if(buflisted(l:i))
+          let s:buflistedLeft = s:buflistedLeft + 1
+        else
+          if(bufexists(l:i) && !strlen(bufname(l:i)) && !s:bufFinalJump)
+            let s:bufFinalJump = l:i
+          endif
+        endif
+      endif
+      let l:i = l:i + 1
+    endwhile
+    if(!s:buflistedLeft)
+      if(s:bufFinalJump)
+        windo if(buflisted(winbufnr(0))) | execute "b! " . s:bufFinalJump | endif
+      else
+        enew
+        let l:newBuf = bufnr("%")
+        windo if(buflisted(winbufnr(0))) | execute "b! " . l:newBuf | endif
+      endif
+      execute s:kwbdWinNum . 'wincmd w'
+    endif
+    if(buflisted(s:kwbdBufNum) || s:kwbdBufNum == bufnr("%"))
+      execute "bd! " . s:kwbdBufNum
+    endif
+    if(!s:buflistedLeft)
+      set buflisted
+      set bufhidden=delete
+      set buftype=
+      setlocal noswapfile
+    endif
+  else
+    if(bufnr("%") == s:kwbdBufNum)
+      let prevbufvar = bufnr("#")
+      if(prevbufvar > 0 && buflisted(prevbufvar) && prevbufvar != s:kwbdBufNum)
+        b #
+      else
+        bn
+      endif
+    endif
+  endif
+endfunction
+command! Kwbd call s:Kwbd(1)
+
+" }}}
+
+" my mappings {{{
+nnoremap <leader>f :call QuickfixToggle()<cr>
+nnoremap <leader>w :w!<cr>
+nnoremap <leader>q :q<cr>
+nnoremap <leader>Q :q!<cr>
+nnoremap <leader>x :x<cr>
+
+nnoremap <leader>l :ls<cr>
+"nnoremap <leader>d :bd<cr>
+"nnoremap <leader>d <Plug>Kwbd<cr>
+nnoremap <silent> <leader>d :Kwbd<cr>
+nnoremap <leader>b :bnext<cr>
+nnoremap <leader>n :bprevious<cr>
+nnoremap <leader>c yyp
+nnoremap <leader>e :lnext<cr>
+nnoremap <leader>E :lprev<cr>
+nnoremap <leader>r maywggovar <esc>pa = require('<esc>pa');<esc>`a
+nnoremap <leader>, :cnext<cr>
+nnoremap <leader>. :cprevious<cr>
+
+vnoremap <leader>% :!~/bin/url-encode-decode<cr>
+
+" move around splits
+nnoremap <leader>h <C-W>h
+nnoremap <leader>j <C-W>j
+nnoremap <leader>k <C-W>k
+nnoremap <leader>l <C-W>l
+
+inoremap jk <esc>
+inoremap <esc> <nop>
+
+" }}}
+
+" neocomplete stuff {{{
+" https://gist.github.com/cridenour/74e7635275331d5afa6b " " Disable AutoComplPop.
+" let g:acp_enableAtStartup = 0
+" " Use neocomplete.
+" let g:neocomplete#enable_at_startup = 1
+" " Use smartcase.
+" let g:neocomplete#enable_smart_case = 1
+" " Set minimum syntax keyword length.
+" let g:neocomplete#sources#syntax#min_keyword_length = 3
+
+ " Plugin key-mappings.
+" inoremap <expr><C-g>     neocomplete#undo_completion()
+"" inoremap <expr><C-l>     neocomplete#complete_common_string()
 "
-"let g:netrw_altv = &spr
-" let g:netrw_winsize = 80
-" Netrw Style Listing
-"let g:netrw_liststyle = 3
+" " Recommended key-mappings.
+" " <CR>: close popup and save indent.
+" function! s:my_cr_function()
+"     return neocomplete#smart_close_popup() . "\<CR>"
+" endfunction
+" "inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+ " <TAB>: completion.
+ "0inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+ " <C-h>, <BS>: close popup and delete backword char.
+ "0inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+ "0inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+ "0inoremap <expr><C-y>  neocomplete#close_popup()
+ "0inoremap <expr><C-e>  neocomplete#cancel_popup()
+
+ " }}}
+
+" more Settings {{{
+set scrolloff=7
+set magic
+set lazyredraw
+set nobackup
+set nowb
+set noswapfile
+
+" Specify the behavior when switching between buffers
+"try
+"  set switchbuf=useopen,usetab,newtab
+"  set stal=2
+"catch
+"endtry
+" }}}
 
 " fns {{{
 "TODO
@@ -760,6 +791,7 @@ set wildignore+=*/.git/*,*/.hg/*,*/.svn/*.
 set wildignore+=*vim/backups*
 set wildignore+=*DS_Store*
 set wildignore+=*.png,*.jpg,*.gif
+set wildignore+=*/dist/*
 
 " from http://vim.wikia.com/wiki/HTML_entities
 " Escape/unescape & < > HTML entities in range (default current line).
@@ -781,6 +813,14 @@ endfunction
 command! -range Htmldecode call HtmlEntities(<line1>, <line2>, 0)
 command! -range Htmlencode call HtmlEntities(<line1>, <line2>, 1)
 "noremap <silent> <leader>h :Entities 0<CR>
-"noremap <silent> \H :Entities 1<CR>
+vnoremap <leader>z <C-v>G:s/(Map it) //<cr>gv:s/.*)/-/<cr>:s/  / /g<cr>
+
+nnoremap <leader>m <C-a>h
 
 "}}}
+
+" Macros {{{
+" format crime map section
+let @z='^dt xjdt)j.j.jj.kddkkkr-Vjj~wwdw~w.^jw~jjjjj'
+"
+" }}}

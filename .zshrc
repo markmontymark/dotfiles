@@ -104,6 +104,8 @@ alias dog='pygmentize -g'
 alias airport='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport'
 alias ff-safe-mode='/Applications/FirefoxDeveloperEdition.app/Contents/MacOS/firefox -safe-mode'
 alias ff='/Applications/FirefoxDeveloperEdition.app/Contents/MacOS/firefox'
+alias n='nvim -u ~/nvimrc-org'
+alias na='APPM=1 nvim -u ~/nvimrc-org'
 # }}}
 
 # uhhuh {{{

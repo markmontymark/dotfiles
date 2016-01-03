@@ -1,0 +1,7 @@
+
+" Load all of the vim files in ~/.vim/custom
+for file in split(glob('$HOME/nvim-org-files/*.vim'), '\n')
+  exe 'source' file
+endfor
+
+filetype plugin indent on

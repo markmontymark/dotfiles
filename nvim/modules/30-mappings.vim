@@ -129,6 +129,9 @@ command! MyTermStop    call s:MyTermStop()
 command! MyTermNpmRunM    call s:MyTermCall('npm run m')
 command! MyTermNpmRunTest call s:MyTermCall('npm test')
 
+" Build project in vssplit to right of editting window
+nnoremap <leader>m :MyTermNpmRunM<cr>
+nnoremap <leader>mt :MyTermNpmRunTest<cr>
 
 
 " Outer nvim tasks
@@ -164,9 +167,6 @@ else
   nnoremap <C-l> <c-w>l
 endif
 
-" Build project in other window
-nnoremap <leader>m :MyTermNpmRunM<cr>
-nnoremap <leader>mt :MyTermNpmRunTest<cr>
 
 
 

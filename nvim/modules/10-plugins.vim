@@ -81,17 +81,7 @@ Plug 'kassio/neoterm'
 " vim colorschemes
 "Plug 'tomas/molokai'
 "Plug 'nanotech/jellybeans.vim'
-"
-" nvim within nvim (broken) {{{
-" Inner / Outer Nvim and theme
-"set background=light
-"if empty($IN_NVIM)
-"  colorscheme jellybeans
-"  let $IN_NVIM=1
-"else
-"  colorscheme molokai
-"endif
-" }}}
+
 
 call plug#end()
 

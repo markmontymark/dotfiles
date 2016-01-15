@@ -103,6 +103,7 @@ function! s:MyTermStart()
   vsplit
   enew
   let g:job1 = termopen('zsh')
+  setlocal nobuflisted
   execute '1wincmd w'
   "if empty(g:job1)
   "  echo 'st job1 still empty'

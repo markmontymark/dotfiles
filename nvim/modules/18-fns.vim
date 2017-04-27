@@ -152,6 +152,49 @@ function! TermEnter()
     execute ":terminal"
   endif
 endfunction
+
+
+
+" :set tabline=%!MyTabLine()
+let twds = ['one', 'two']
+function! MyTabLabel(n)
+    return get(g:twds, a:n - 1, '[no name]')
+endfunction
+"function MyTabLabel(n)
+"  let buflist = tabpagebuflist(a:n)
+"  let winnr = tabpagewinnr(a:n)
+"  return bufname(buflist[winnr - 1])
+"endfunction
+
+function MyTabLine()
+  let s = ''
+  for i in range(tabpagenr('$'))
+    " select the highlighting
+    if i + 1 == tabpagenr()
+      let s .= '%#TabLineSel#'
+    else
+      let s .= '%#TabLine#'
+    endif
+
+    " set the tab page number (for mouse clicks)
+    let s .= '%' . (i + 1) . 'T'
+
+    " the label is made by MyTabLabel()
+    let s .= ' %{MyTabLabel(' . (i + 1) . ')} '
+  endfor
+
+  " after the last tab fill with TabLineFill and reset tab page nr
+  let s .= '%#TabLineFill#%T'
+
+  " right-align the label to close the current tab page
+  if tabpagenr('$') > 1
+    let s .= '%=%#TabLine#%999Xclose'
+  endif
+
+  return s
+endfunction
+set tabline=%!MyTabLine()
+
 "map <F12> :call TermEnter()<CR>
 "
 " My Usage
@@ -170,3 +213,30 @@ endfunction
 "     :Qfdo! s#this#that#
 "     :Qfdofile %s#this#that#
 "     :Qfdofile! %s#this#that#
+"
+"
+
+"function! SwitchToNextBuffer(incr)
+"  let help_buffer = (&filetype == 'help')
+"  let current = bufnr("%")
+"  let last = bufnr("$")
+"  let new = current + a:incr
+"  while 1
+"    if new != 0 && bufexists(new) && ((getbufvar(new, "&filetype") == 'help') == help_buffer)
+"      execute ":buffer ".new
+"      break
+"    else
+"      let new = new + a:incr
+"      if new < 1
+"        let new = last
+"      elseif new > last
+"        let new = 1
+"      endif
+"      if new == current
+"        break
+"      endif
+"    endif
+"  endwhile
+"endfunction
+"nnoremap <silent> <leader>, :call SwitchToNextBuffer(1)<CR>
+"nnoremap <silent> <leader>. :call SwitchToNextBuffer(-1)<CR>

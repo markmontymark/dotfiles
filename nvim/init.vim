@@ -6,6 +6,9 @@ function! Dot(path)
   return '~/.config/nvim/' . a:path
 endfunction
 
+" Switch syntax highlighting on, when the terminal has colors
+syntax on
+
 " Load all configuration modules.
 for file in split(glob(Dot('modules/*.vim')), '\n')
   execute 'source' file

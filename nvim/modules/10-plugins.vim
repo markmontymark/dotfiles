@@ -1,10 +1,11 @@
 call plug#begin('~/.config/nvim/plugged')
 
-Plug 'easymotion/vim-easymotion'
+"Plug 'easymotion/vim-easymotion'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-classpath'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-tbone'
 Plug 'tpope/vim-projectionist'
 Plug 'tpope/vim-unimpaired'
@@ -21,6 +22,7 @@ Plug 'szw/vim-ctrlspace'
 Plug 'kchmck/vim-coffee-script', { 'for': 'coffee' }
 Plug 'elzr/vim-json'
 Plug 'pangloss/vim-javascript'
+Plug 'othree/javascript-libraries-syntax.vim'
 Plug 'groenewege/vim-less'
 Plug 'XadillaX/json-formatter.vim'
 Plug 'gregsexton/MatchTag'
@@ -42,7 +44,7 @@ Plug 'guns/vim-sexp', {'for': 'clojure'}
 Plug 'tpope/vim-sexp-mappings-for-regular-people',{'for': 'clojure'}
 
 " multi-lang plugins
-Plug 'Chiel92/vim-autoformat'
+"   COMMENTED 2016-10-05   Plug 'Chiel92/vim-autoformat'
 Plug 'Olical/vim-enmasse'
 Plug 'janko-m/vim-test'
 
@@ -64,8 +66,9 @@ Plug 'gregsexton/gitv'
 "Plug 'kien/ctrlp.vim'
 Plug 'rking/ag.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
+"Plug 'junegunn/fzf.vim'
 Plug 'vim-scripts/taglist.vim'
+Plug 'vim-scripts/utl.vim'
 
 Plug 'godlygeek/tabular'
 Plug 'kien/rainbow_parentheses.vim'
@@ -78,6 +81,15 @@ Plug 'neovim/node-host' " write vim plugins in JS
 Plug 'benekastah/neomake'
 Plug 'kassio/neoterm'
 
+Plug 'mattn/sonictemplate-vim'
+Plug 'mattn/calendar-vim'
+Plug 'jceb/vim-orgmode'
+Plug 'lambdatoast/elm.vim'
+
+Plug 'vimwiki/vimwiki'
+Plug 'Valloric/YouCompleteMe'
+
+Plug 'sbdchd/neoformat'
 " vim colorschemes
 "Plug 'tomas/molokai'
 "Plug 'nanotech/jellybeans.vim'

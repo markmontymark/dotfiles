@@ -31,6 +31,7 @@ else
 endif
 
 " }}}
+
 " Ack/Ag {{{
 let g:ackprg  = 'ag --nogroup --nocolor --column'
 let g:grepprg = 'ag --nogroup --nocolor --column'
@@ -111,10 +112,10 @@ let g:airline#extensions#hunks#non_zero_only = 1
 
 " }}}
 " FZF {{{
-nnoremap <c-p> :Files<cr>
+nnoremap <c-f> :FZF<cr>
 " }}}
 " easymotion {{{
-map <Leader> <Plug>(easymotion-prefix)
+"map <Leader> <Plug>(easymotion-prefix)
 " Gif config
 " nmap s <Plug>(easymotion-s2)
 " nmap t <Plug>(easymotion-t2)
@@ -139,12 +140,24 @@ let g:gist_open_browser_after_post = 1
 "map <Leader>cs :Tabularize /:\zs<cr>
 " }}}
 " benekastah/neomake {{{
+let g:neomake_javascript_eslint_maker = {
+    \ 'args': ['--verbose'],
+    \ 'errorformat': '%A%f: line %l\, col %v\, %m \(%t%*\d\)',
+    \ }
 let g:neomake_javascript_jshint_maker = {
     \ 'args': ['--verbose'],
     \ 'errorformat': '%A%f: line %l\, col %v\, %m \(%t%*\d\)',
     \ }
+
+"  BEFORE SEPT 22 let g:neomake_javascript_enabled_makers = ['jshint']
+"let g:neomake_javascript_enabled_makers = ['eslint']
 let g:neomake_javascript_enabled_makers = ['jshint']
+let g:neomake_open_list=0
+let g:neomake_jsx_enabled_makers = ['eslint']
+let g:neomake_logfile = '/dev/null'
+let g:jsx_ext_required = 0 " Allow JSX in normal JS files
 autocmd! BufWritePost * Neomake
+
 
 " }}}
 " CtrlSpace {{{
@@ -168,9 +181,14 @@ hi link CtrlSpaceSearch   Search
 hi link CtrlSpaceStatus   StatusLine
 "hi CtrlSpaceSearch guifg=#cb4b16 guibg=NONE gui=bold ctermfg=9 ctermbg=NONE term=bold cterm=bold
 " }}}
-
+" RainbowParentheses {{{
 au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
+" }}}
+" sonictemplate {{{
+let g:sonictemplate_vim_template_dir = '$HOME/.config/nvim/modules/templates'
+" }}}
+
 " }}}

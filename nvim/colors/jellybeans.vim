@@ -298,7 +298,7 @@ endfun
 " }}}
 
 if !exists("g:jellybeans_background_color")
-  let g:jellybeans_background_color = "151515"
+  let g:jellybeans_background_color = "000000"
 end
 
 call s:X("Normal","e8e8d3",g:jellybeans_background_color,"","White","")
@@ -307,7 +307,7 @@ set background=dark
 if !exists("g:jellybeans_use_lowcolor_black") || g:jellybeans_use_lowcolor_black
     let s:termBlack = "Black"
 else
-    let s:termBlack = "Grey"
+    let s:termBlack = "Black"
 endif
 
 if version >= 700
@@ -324,7 +324,7 @@ if version >= 700
   call s:X("PmenuSel","101010","eeeeee","",s:termBlack,"White")
 endif
 
-call s:X("Visual","","404040","","",s:termBlack)
+call s:X("Visual","ffffff","1070f0","","White",s:termBlack)
 call s:X("Cursor",g:jellybeans_background_color,"b0d0f0","","","")
 
 call s:X("LineNr","605958",g:jellybeans_background_color,"none",s:termBlack,"")
@@ -514,7 +514,7 @@ hi! link TagListFileName Directory
 call s:X("PreciseJumpTarget","B9ED67","405026","","White","Green")
 
 if !exists("g:jellybeans_background_color_256")
-  let g:jellybeans_background_color_256=233
+  let g:jellybeans_background_color_256=000
 end
 " Manual overrides for 256-color terminals. Dark colors auto-map badly.
 if !s:low_color

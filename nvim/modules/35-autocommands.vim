@@ -15,7 +15,14 @@ function! StripTrailingWhitespace()
   endif
   %s/\s\+$//e
 endfunction
-autocmd BufWritePre * call StripTrailingWhitespace()
+"autocmd BufWritePre * call StripTrailingWhitespace()
+"if($APPM != 1)
+"  autocmd BufWritePre *.js Autoformat
+"endif
+
+
+"autocmd FileType javascript set formatprg=prettier\ --stdin
+"autocmd BufWritePre *.js Neoformat
 
 " file formats
 autocmd Filetype gitcommit setlocal spell textwidth=72

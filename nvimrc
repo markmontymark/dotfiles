@@ -1,29 +1,19 @@
 
 " Make Vim more useful. This should always be your first configuration line.
-set nocompatible
+set nocompatible  " ignored by nvim, here in case using for vimrc
 
-" Wraps paths to make them relative to this directory.
-" function! Dot(path)
-"   return '~/.config/nvim/' . a:path
-" endfunction
-"
-" " Load all configuration modules.
-" for file in split(glob(Dot('modules/*.vim')), '\n')
-"   execute 'source' file
-" endfor
-
-" Plugin Manager: vim-plug
-" github.com/junegunn/vim-plug
-"
+" set vim config dir based on if/not windows {{{
 if has('win32') || has ('win64')
   let $VIMHOME = $HOME . "/AppData/Local/nvim"
 else
   let $VIMHOME = $HOME . "/.config/nvim"
 endif
-echom $VIMHOME
-
+"echom $VIMHOME
+" }}}
 "  plugin manager {{{
-"
+
+" Plugin Manager: vim-plug
+" github.com/junegunn/vim-plug
 " First time run, gets/installs vim-plug and tries to PlugInstall
 if empty(glob($VIMHOME . '/autoload/plug.vim'))
   if has('win32') || has ('win64')
@@ -42,7 +32,6 @@ endif
 " Vars to set before loading plugins
 
 let g:mapleader = " "
-let g:ctrlspace_use_tabline = 1
 let g:airline_exclude_preview = 1
 let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 let g:rainbow_active = 1
@@ -71,20 +60,21 @@ Plug 'machakann/vim-sandwich'
 
 " project organization
 Plug 'mhinz/vim-startify'
-Plug 'szw/vim-ctrlspace'
 
 "Plug 'scrooloose/syntastic' -- Neomake is handling this now with help from
 "jshint
 
 " js / css / html
-Plug 'kchmck/vim-coffee-script', { 'for': 'coffee' }
+"Plug 'kchmck/vim-coffee-script', { 'for': 'coffee' }
+"
+"TODO ADD {'for':'javascript,js,css,html,....??'}
 Plug 'elzr/vim-json'
 Plug 'pangloss/vim-javascript'
 Plug 'groenewege/vim-less'
 Plug 'XadillaX/json-formatter.vim'
 Plug 'gregsexton/MatchTag'
 Plug 'editorconfig/editorconfig-vim'
-Plug 'mattn/emmet-vim' " html editting short cuts, <c-y>/  <c-y>,
+"Plug 'mattn/emmet-vim' " html editting short cuts, <c-y>/  <c-y>,
 Plug 'walm/jshint.vim'
 "Plug 'ternjs/tern_for_vim'
 
@@ -101,6 +91,7 @@ Plug 'fatih/vim-go', { 'for': 'go' }
 "Plug 'tpope/vim-sexp-mappings-for-regular-people',{'for': 'clojure'}
 
 " multi-lang plugins
+" TODO autoformat or prettier or both???
 Plug 'Chiel92/vim-autoformat'
 Plug 'Olical/vim-enmasse'
 Plug 'janko-m/vim-test'
@@ -115,17 +106,17 @@ endif
 " }}}
 
 " git
+" TODO is there a {'for':'.git'} ????
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'gregsexton/gitv'
 
 " searching
-" replaced ctrlp with fzf
-"Plug 'kien/ctrlp.vim'
+" TODO is there a .../rg.vim or vim-rg plugin?
 Plug 'rking/ag.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'vim-scripts/taglist.vim'
+"Plug 'vim-scripts/taglist.vim'
 
 Plug 'godlygeek/tabular'
 Plug 'kien/rainbow_parentheses.vim'
@@ -141,7 +132,7 @@ Plug 'kassio/neoterm'
 " vim colorschemes
 "Plug 'tomas/molokai'
 "Plug 'nanotech/jellybeans.vim'
-
+Plug 'w0rp/ale'
 
 call plug#end()
 
@@ -534,9 +525,23 @@ else
 endif
 
 " }}}
-" Ack/Ag {{{
-let g:ackprg  = 'ag --nogroup --nocolor --column'
-let g:grepprg = 'ag --nogroup --nocolor --column'
+" Rg/Ag/Ack/Grep {{{
+" TODO install a vim-rg instead of hacking vim-ag/Ag.vim to use rg instead???
+let g:ag_working_path_mode="r"
+if executable('rg')
+  let g:ag_prg  = 'rg --column'
+  let g:ackprg  = 'rg --nocolor --column'
+  let g:grepprg = 'rg --nocolor --column'
+elseif if executable('ag')
+  let g:ag_prg  = 'ag --nogroup --nocolor --column'
+  let g:ackprg  = 'ag --nogroup --nocolor --column'
+  let g:grepprg = 'ag --nogroup --nocolor --column'
+elseif if executable('ack')
+  let g:ackprg  = 'ack --nogroup --nocolor --column'
+  let g:grepprg = 'ack --nogroup --nocolor --column'
+else
+  let g:grepprg = 'grep --nogroup --nocolor --column'
+endif
 " }}}
 " Airline {{{
 
@@ -578,49 +583,8 @@ let g:airline_section_y = ''
 let g:airline#extensions#hunks#non_zero_only = 1
 
 " }}}
-" CtrlP (commented out, see FZF below) {{{
-"map <leader>o <C-p>
-"map <leader>y :CtrlPBuffer<cr>
-"let g:ctrlp_show_hidden=1
-"let g:ctrlp_working_path_mode=0
-"let g:ctrlp_max_height=30
-"let g:ctrlp_open_new_file = 'r'
-"let g:ctrlp_open_multiple_files = '1ijr'
-"
-"" CtrlP -> override <C-o> to provide options for how to open files
-""let g:ctrlp_arg_map = 1
-"
-"" CtrlP -> files matched are ignored when expanding wildcards
-"set wildignore+=*/.git/*,*/.hg/*,*/.svn/*.,*/.DS_Store
-"
-"" CtrlP -> use Ag for searching instead of VimScript
-"" (might not work with ctrlp_show_hidden and ctrlp_custom_ignore)
-"let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-"
-"" CtrlP -> directories to ignore when fuzzy finding
-"let g:ctrlp_custom_ignore = '\v[\/]((node_modules)|\.(git|svn|grunt|sass-cache))$'
-"
-"
-"let g:ctrlp_use_caching = 0
-"if executable('ag')
-"  set grepprg=ag\ --nogroup\ --nocolor
-"  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-"else
-"  let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
-"  let g:ctrlp_prompt_mappings = {
-"        \ 'AcceptSelection("e")': ['<space>', '<cr>', '<2-LeftMouse>'],
-"        \ }
-"endif
-
-" }}}
 " FZF {{{
 nnoremap <c-p> :Files<cr>
-" }}}
-" easymotion {{{
-map <Leader> <Plug>(easymotion-prefix)
-" Gif config
-" nmap s <Plug>(easymotion-s2)
-" nmap t <Plug>(easymotion-t2)
 " }}}
 " Git gutter {{{
 let g:gitgutter_enabled = 1
@@ -635,7 +599,13 @@ let g:github_token = $GITHUB_TOKEN
 let g:gist_detect_filetype = 1
 let g:gist_open_browser_after_post = 1
 " }}}
-" Tabularize {{{
+" easymotion  commented out {{{
+" map <Leader> <Plug>(easymotion-prefix)
+" Gif config
+" nmap s <Plug>(easymotion-s2)
+" nmap t <Plug>(easymotion-t2)
+" }}}
+" Tabularize commented out mappings but still using! {{{
 "map <Leader>e :Tabularize /=<cr>
 "map <Leader>c :Tabularize /:<cr>
 "map <Leader>es :Tabularize /=\zs<cr>
@@ -651,27 +621,6 @@ let g:neomake_javascript_enabled_makers = ['jshint']
 " /dev/null in win?
 autocmd! BufWritePost * Neomake
 
-" }}}
-" CtrlSpace {{{
-
-if executable("ag")
-  let g:CtrlSpaceGlobCommand = 'ag -l --nocolor -g ""'
-endif
-
-let g:CtrlSpaceLoadLastWorkspaceOnStart = 1
-let g:CtrlSpaceSaveWorkspaceOnSwitch = 1
-let g:CtrlSpaceSaveWorkspaceOnExit = 1
-let g:CtrlSpaceUseUnicode = 0
-
-if exists("g:CtrlSpaceLoaded")                  " ctrl-space plugin does its own fancy buffer/tab organization
-  set showtabline=0
-endif
-
-hi link CtrlSpaceNormal   PMenu
-hi link CtrlSpaceSelected PMenuSel
-hi link CtrlSpaceSearch   Search
-hi link CtrlSpaceStatus   StatusLine
-"hi CtrlSpaceSearch guifg=#cb4b16 guibg=NONE gui=bold ctermfg=9 ctermbg=NONE term=bold cterm=bold
 " }}}
 
 " }}}
@@ -712,8 +661,8 @@ nnoremap 0 ^
 nnoremap ^ 0
 
 " Treat long lines as break lines
-map k gk
-map j gj
+"map k gk
+"map j gj
 iabbrev adn and
 iabbrev tehn then
 iabbrev waht what
@@ -739,13 +688,8 @@ nnoremap <leader>w :w!<cr>
 nnoremap <leader>q :q<cr>
 nnoremap <leader>Q :q!<cr>
 
-"if exists("g:CtrlSpaceLoaded")                  " ctrl-space plugin does its own fancy buffer/tab organization
-"  nnoremap <leader>, :CtrlSpaceGoDown<cr>
-"  nnoremap <leader>. :CtrlSpaceGoUp<cr>
-"else
 nnoremap <leader>, :bnext<cr>
 nnoremap <leader>. :bprevious<cr>
-"endif
 
 nnoremap <leader>e :lnext<cr>
 nnoremap <leader>E :lprev<cr>
@@ -1005,17 +949,6 @@ let @w='jddjjI- jkwlv$~Vjj:s/\(BLOCK\|@\)//wwwwwwwwwvw~k$^wwlve~wlve~jkjji<br
 au BufEnter * if &buftype == 'terminal' | :startinsert | endif
 
 " }}}
-" misc commented out stuff {{{
-" https://www.reddit.com/r/neovim/comments/3447p3/i_was_inspired_to_check_out_neovim_after_hearing/
-" au WinEnter * vertical resize 104
-
-" move around splits
-" below <C-h> required (in OSX) to fix terminfo with this in .zshrc
-""     ## FIX <C-h> mapping in neovim for Terminal app in OS x
-""     ## from https://github.com/neovim/neovim/issues/2048, tarruda commented on Mar 10
-""     infocmp $TERM | sed 's/kbs=^[hH]/kbs=\\177/' > $TERM.ti
-""     tic $TERM.ti
-" }}}
 
 " colors {{{
 "if empty(g:envInNvim)
@@ -1036,3 +969,17 @@ highlight SignColumn ctermbg=black
 
 
 filetype plugin indent on
+
+
+" old stuff commented out {{{
+
+" https://www.reddit.com/r/neovim/comments/3447p3/i_was_inspired_to_check_out_neovim_after_hearing/
+" au WinEnter * vertical resize 104
+
+" move around splits
+" below <C-h> required (in OSX) to fix terminfo with this in .zshrc
+""     ## FIX <C-h> mapping in neovim for Terminal app in OS x
+""     ## from https://github.com/neovim/neovim/issues/2048, tarruda commented on Mar 10
+""     infocmp $TERM | sed 's/kbs=^[hH]/kbs=\\177/' > $TERM.ti
+""     tic $TERM.ti
+" }}}

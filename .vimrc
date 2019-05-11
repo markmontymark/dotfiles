@@ -1,78 +1,16 @@
-let g:mapleader = ","
+let g:mapleader = ' '
 
-"NeoBundle Scripts {{{
-if has('vim_starting')
-  if &compatible
-    set nocompatible               " Be iMproved
-  endif
+" sets {{{
 
-  " Required:
-  set runtimepath+=~/.vim/bundle/neobundle.vim/
-endif
+set nocompatible
 
-" Required:
-call neobundle#begin(expand('~/.vim/bundle'))
-
-" Let NeoBundle manage NeoBundle
-" Required:
-NeoBundleFetch 'Shougo/neobundle.vim'
-
-" Add or remove your Bundles here:
-NeoBundle 'tpope/vim-abolish'
-NeoBundle 'tpope/vim-obsession'
-NeoBundle 'tpope/vim-classpath'
-NeoBundle 'tpope/vim-dispatch'
-NeoBundle 'tpope/vim-fireplace'
-NeoBundle 'tpope/vim-surround'
-NeoBundle 'tpope/vim-tbone'
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'tpope/vim-projectionist'
-NeoBundle 'machakann/vim-sandwich'
-NeoBundle 'scrooloose/syntastic'
-NeoBundle 'kchmck/vim-coffee-script'
-NeoBundle 'elzr/vim-json'
-NeoBundle 'pangloss/vim-javascript'
-NeoBundle 'fatih/vim-go'
-NeoBundle 'groenewege/vim-less'
-NeoBundle 'guns/vim-clojure-static'
-NeoBundle 'rking/ag.vim'
-NeoBundle 'XadillaX/json-formatter.vim'
-NeoBundle 'bling/vim-airline'
-NeoBundle 'kien/ctrlp.vim'
-NeoBundle 'airblade/vim-gitgutter'
-NeoBundle 'vim-scripts/taglist.vim'
-NeoBundle 'godlygeek/tabular.git'
-NeoBundle 'moll/vim-node'
-NeoBundle 'rdio/jsfmt'
-NeoBundle 'mephux/vim-jsfmt'
-NeoBundle 'kien/rainbow_parentheses.vim'
-NeoBundle 'guns/vim-sexp'
-NeoBundle 'tpope/vim-sexp-mappings-for-regular-people'
-NeoBundle 'gregsexton/MatchTag'
-NeoBundle 'gregsexton/gitv'
-NeoBundle 'janko-m/vim-test.git'
-NeoBundle 'benmills/vimux'
-"NeoBundlelugin 'marijnh/tern_for_vim'
-"NeoBundle"ugin 'vim-scripts/jsbeautify'
-"NeoBundle 'vim-scripts/Superior-Haskell-Interaction-Mode-SHIM.git'
-
-
-" Required:
-call neobundle#end()
-
-" Required:
-filetype plugin indent on
-
-" If there are uninstalled bundles found on startup,
-" this will conveniently prompt you to install them.
-NeoBundleCheck
-"}}}
-
-" Settings {{{
+" A buffer is marked as ‘hidden’ if it has unsaved changes, and it is not currently loaded in a window
+" if you try and quit Vim while there are hidden buffers, you will raise an error:
+" E162: No write since last change for buffer “a.txt”
+set hidden
 " Switch syntax highlighting on, when the terminal has colors
+
 syntax on
-
-
 " No backup files
 "set nobackup
 
@@ -103,19 +41,16 @@ set smartcase
 " Make sure any searches /searchPhrase doesn't need the \c escape character
 set ignorecase
 
-" A buffer is marked as ‘hidden’ if it has unsaved changes, and it is not currently loaded in a window
-" if you try and quit Vim while there are hidden buffers, you will raise an error:
-" E162: No write since last change for buffer “a.txt”
-set hidden
-
 " Turn word wrap off
 set wrap
 
 " Allow backspace to delete end of line, indent and start of line characters
 set backspace=indent,eol,start
 
-" Convert tabs to spaces
-set expandtab
+" Convert tabs to spaces if we're not editting AppMeasurement files
+" if($APPM != 1)
+"   set expandtab
+" endif
 
 " Set tab size in spaces (this is for manual indenting)
 set tabstop=2
@@ -126,7 +61,7 @@ set shiftwidth=2
 " Turn on line numbers
 set number
 
-" Highlight tailing whitespace
+" Highlight trailing whitespace
 "set list listchars=tab:\ \ ,trail:·
 
 " Get rid of the delay when pressing O (for example)
@@ -143,7 +78,7 @@ set statusline=%f\ %=L:%l/%L\ %c\ (%p%%)
 set guioptions-=T
 
 " UTF encoding
-set encoding=utf-8
+"set encoding=utf-8 " this is default in neovim
 
 " Autoload files that have changed outside of vim
 set autoread
@@ -160,7 +95,7 @@ set splitbelow
 set splitright
 
 " Highlight the current line
-set cursorline
+"set cursorline
 
 " Ensure Vim doesn't beep at you every time you make a mistype
 set visualbell
@@ -183,132 +118,93 @@ set pastetoggle=<F2>
 " cutoff appears on longer screens
 "autocmd BufWinEnter * highlight ColorColumn ctermbg=233
 "set colorcolumn=80
+
+set scrolloff=7
+set magic
+set lazyredraw
+set nobackup
+set nowb
+set noswapfile
+
+" Keep undo history across sessions, by storing in file.
+silent !mkdir ~/.vim/backups > /dev/null 2>&1
+set undodir=~/.vim/backups
+set undofile
+
+
+
+" Will insert tab at beginning of line, will use completion if not at beginning
+set wildmode=list:longest,list:full
+
+" Stuff to ignore when tab completing
+set wildignore=*.o,*.obj,*~,*.pyc
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*.
+set wildignore+=*vim/backups*
+set wildignore+=*DS_Store*
+set wildignore+=*.png,*.jpg,*.gif
+set wildignore+=*/dist/*
 " }}}
 
-" Plugins {{{
-"execute pathogen#infect()
-"filetype plugin indent on " required by Pathogen Plugin Manager
+" view binary files via xxd {{{
+augroup Binary
+   au!
+   au BufReadPre  *.bin let &bin=1
+   au BufReadPost *.bin if &bin | %!xxd
+   au BufReadPost *.bin set ft=xxd | endif
+   au BufWritePre *.bin if &bin | %!xxd -r
+   au BufWritePre *.bin endif
+   au BufWritePost *.bin if &bin | %!xxd
+   au BufWritePost *.bin set nomod | endif
+augroup END
+" }}}
 
-" Theme
-set background=light
-colorscheme molokai
+" plugins {{{
 
-" CtrlP
-"map <leader>o <C-p>
-"map <leader>y :CtrlPBuffer<cr>
-"let g:ctrlp_show_hidden=1
-"let g:ctrlp_working_path_mode=0
-"let g:ctrlp_max_height=30
-"let g:ctrlp_open_new_file = 'r'
-"let g:ctrlp_open_multiple_files = '1ijr'
-"
-"" CtrlP -> override <C-o> to provide options for how to open files
-""let g:ctrlp_arg_map = 1
-"
-"" CtrlP -> files matched are ignored when expanding wildcards
-"set wildignore+=*/.git/*,*/.hg/*,*/.svn/*.,*/.DS_Store
-"
-"" CtrlP -> use Ag for searching instead of VimScript
-"" (might not work with ctrlp_show_hidden and ctrlp_custom_ignore)
-"let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-"
-"" CtrlP -> directories to ignore when fuzzy finding
-"let g:ctrlp_custom_ignore = '\v[\/]((node_modules)|\.(git|svn|grunt|sass-cache))$'
-"
-"
-let g:ctrlp_use_caching = 0
-if executable('ag')
-  set grepprg=ag\ --nogroup\ --nocolor
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-else
-  let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files . -co --exclude-standard', 'find %s -type f']
-  let g:ctrlp_prompt_mappings = {
-        \ 'AcceptSelection("e")': ['<space>', '<cr>', '<2-LeftMouse>'],
-        \ }
+" start plugin manager vim-plug, TODO deprecate in favor of vim's built-in plugin manager? {{{
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall
 endif
-" Ack (uses Ag behind the scenes)
-let g:ackprg = 'ag --nogroup --nocolor --column'
-let g:grepprg = 'ag --nogroup --nocolor --column'
-
-" Airline (status line)
-let g:airline_powerline_fonts = 1
- let g:airline_mode_map = {
-  \ '__' : '-',
-  \ 'n'  : 'N',
-  \ 'i'  : 'I',
-  \ 'R'  : 'R',
-  \ 'c'  : 'C',
-  \ 'v'  : 'V',
-  \ 'V'  : 'V',
-  \ '^V' : 'V',
-  \ 's'  : 'S',
-  \ 'S'  : 'S',
-  \ '^S' : 'S',
-  \ }
-
-let g:airline_left_sep='▶'
-let g:airline_left_alt_sep='▶'
-let g:airline_right_sep='◀'
-let g:airline_right_alt_sep='◀'
-"let g:airline_symbols.linenr = '␊'
-if !exists('g:airline_symbols')
-  let g:airline_symbols = {}
-  endif
-let g:airline_symbols.linenr = '␤'
-"let g:airline_symbols.linenr = '¶'
-let g:airline_symbols.branch = '⎇'
-let g:airline_symbols.paste = 'ρ'
-"let g:airline_symbols.paste = 'Þ'
-"let g:airline_symbols.paste = '∥'
-let g:airline_symbols.whitespace = 'Ξ'
-
-" remove branch from section_b
-let g:airline_section_b = '%{airline#util#wrap(airline#extensions#hunks#get_hunks(),0)}'
-" clear out fileencoding/format from section_y
-let g:airline_section_y = ''
-"let g:airline_section_z = '%3p%% %#__accent_bold#%4l%#__restore__#:%3c'
-let g:airline_section_z = '%3p%% %4l %3c'
-let g:airline#extensions#hunks#non_zero_only = 1
-
-" Gist authorisation settings
-let g:github_user = $GITHUB_USER
-let g:github_token = $GITHUB_TOKEN
-let g:gist_detect_filetype = 1
-let g:gist_open_browser_after_post = 1
-" Related plugins:
-" https://github.com/mattn/webapi-vim
-" https://github.com/vim-scripts/Gist.vim
-" https://github.com/tpope/vim-fugitive
-
-" HTML generation using 'emmet-vim'
-" NORMAL mode Ctrl+y then , <C-y,>
-
-" Git gutter
-let g:gitgutter_enabled = 1
-let g:gitgutter_eager = 0
-let g:gitgutter_sign_column_always = 1
-highlight clear SignColumn
-
-" Searching the file system
-"map <leader>' :NERDTreeToggle<cr>
-
-" Tabularize
-"map <Leader>e :Tabularize /=<cr>
-"map <Leader>c :Tabularize /:<cr>
-"map <Leader>es :Tabularize /=\zs<cr>
-"map <Leader>cs :Tabularize /:\zs<cr>
-
-
-" Camel Case Motion (for dealing with programming code)
-"map <silent> w <Plug>CamelCaseMotion_w
-"map <silent> b <Plug>CamelCaseMotion_b
-"map <silent> e <Plug>CamelCaseMotion_e
-"sunmap w
-"sunmap b
-"sunmap e
 " }}}
 
-" Mappings {{{
+
+call plug#begin('~/.vim/pack')
+
+Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-surround'
+Plug 'leafgarland/typescript-vim'
+Plug 'peitalin/vim-jsx-typescript'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'rking/ag.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'airblade/vim-gitgutter' " for showing per-line git state in left gutter
+Plug 'tpope/vim-fugitive'
+Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown'] }
+Plug 'godlygeek/tabular' " Tabularize
+"Plug 'vim-syntastic/syntastic'
+Plug 'w0rp/ale'
+Plug 'othree/yajs'
+call plug#end()
+" }}}
+
+" plugin configs {{{
+
+" Syntastic ( deprecated by w0rp/ale)
+" from https://medium.com/@hpux/vim-and-eslint-16fa08cc580f
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+" let g:syntastic_check_on_open = 1
+" let g:syntastic_check_on_wq = 0
+" let g:syntastic_javascript_checkers = ['eslint']
+" let g:syntastic_javascript_eslint_exe = 'eslint'
+" }}}
+
+" mappings {{{
 " Notes...
 "
 " :map     j gg (j will be mapped to gg)
@@ -322,435 +218,10 @@ highlight clear SignColumn
 " to map something in just NORMAL mode use :nmap or :nnoremap
 " to map something in just VISUAL mode use :vmap or :vnoremap
 
-nnoremap ; :
-
-iabbrev adn and
-iabbrev tehn then
-iabbrev waht what
-iabbrev woh who
-iabbrev amddef "use strict";<cr>/*global define*/
-
-iabbrev ccopy Copyright 2014 Me, All Rights Reserved.
-
-iabbrev cxl console.log('
-iabbrev meee 'use strict';<CR><CR>module.exports = ;<CR><CR>
-iabbrev fnctor /*jshint validthis:true*/<CR>if(this.constructor !== ){<CR>return new ();<CR>}<CR>
-iabbrev forlist for(var i=0,len=.length; i < len; i++){
-iabbrev varreq var  = require('');
-iabbrev ifnoargs if(arguments.length === 0){<CR>
-iabbrev fxn function (){
-iabbrev hxl <!DOCTYPE html><cr><html><cr><head><cr><meta charset="utf8"/><cr><title>title</title><cr></head><cr><body><cr><cr></body><cr></html>
-
-" Clear search buffer
-:nnoremap § :nohlsearch<cr>
-
-" Command to use sudo when needed
-cmap w!! %!sudo tee > /dev/null %
-
-" File System Explorer (in horizontal split)
-map <leader>. :Sexplore<cr>
-
-" Buffers (runs the delete buffer command on all open buffers)
-"map <leader>yd :bufdo bd<cr>
-
-" Make handling vertical/linear Vim windows easier
-map <leader>w- <C-W>- " decrement height
-map <leader>w+ <C-W>+ " increment height
-map <leader>w] <C-W>_ " maximize height
-map <leader>w[ <C-W>= " equalize all windows
-
-" Handling horizontal Vim windows doesn't appear to be possible.
-" Attempting to map <C-W> < and > didn't work
-" Same with mapping <C-W>|
-
-" Make splitting Vim windows easier
-"map <leader>; <C-W>s
-"map <leader>` <C-W>v
-
-" visually select, then url encode or decode.
-vnoremap <leader>% :!~/bin/url-encode-decode<cr>
-vnoremap <leader>5 :!base64<cr>
-
-nnoremap <leader>zz lve~w
-" Running Tests...
-" See also <https://gist.github.com/8114940>
-
-" Run currently open RSpec test file
-"map <Leader>rf :w<cr>:!rspec % --format nested<cr>
-
-" Run current RSpec test
-" RSpec is clever enough to work out the test to run if the cursor is on any line within the test
-"map <Leader>rl :w<cr>:exe "!rspec %" . ":" . line(".")<cr>
-
-" Run all RSpec tests
-"map <Leader>rt :w<cr>:!rspec --format nested<cr>
-
-" Run currently open cucumber feature file
-"map <Leader>cf :w<cr>:!cucumber %<cr>
-
-" Run current cucumber scenario
-"map <Leader>cl :w<cr>:exe "!cucumber %" . ":" . line(".")<cr>
-
-" Run all cucumber feature files
-"map <Leader>ct :w<cr>:!cucumber<cr>
-
-" Tmux style window selection
-"map <Leader>ws :ChooseWin<cr>
-
-" opening h/v splits
-"nnoremap <leader>| :vne<cr>
-"nnoremap <leader>- :new<cr>
-" }}}
-
-" Commands {{{
-" jump to last cursor
-autocmd BufReadPost *
-  \ if line("'\"") > 0 && line("'\"") <= line("$") |
-  \   exe "normal g`\"" |
-  \ endif
-
-fun! StripTrailingWhitespace()
-  " don't strip on these filetypes
-  if &ft =~ 'markdown'
-    return
-  endif
-  %s/\s\+$//e
-endfun
-autocmd BufWritePre * call StripTrailingWhitespace()
-
-" file formats
-autocmd Filetype gitcommit setlocal spell textwidth=72
-autocmd Filetype markdown setlocal wrap linebreak nolist textwidth=0 wrapmargin=0 " http://vim.wikia.com/wiki/Word_wrap_without_line_breaks
-autocmd FileType sh,cucumber,ruby,yaml,zsh,vim setlocal shiftwidth=2 tabstop=2 expandtab
-
-" specify syntax highlighting for specific files
-autocmd Bufread,BufNewFile *.spv set filetype=php
-autocmd Bufread,BufNewFile *.md set filetype=markdown " Vim interprets .md as 'modula2' otherwise, see :set filetype?
-
-" Highlight words to avoid in tech writing
-" http://css-tricks.com/words-avoid-educational-writing/
-"highlight TechWordsToAvoid ctermbg=red ctermfg=white
-"match TechWordsToAvoid /\cobviously\|basically\|simply\|of\scourse\|clearly\|just\|everyone\sknows\|however\|so,\|easy/
-"autocmd BufWinEnter * match TechWordsToAvoid /\cobviously\|basically\|simply\|of\scourse\|clearly\|just\|everyone\sknows\|however,\|so,\|easy/
-"autocmd InsertEnter * match TechWordsToAvoid /\cobviously\|basically\|simply\|of\scourse\|clearly\|just\|everyone\sknows\|however,\|so,\|easy/
-"autocmd InsertLeave * match TechWordsToAvoid /\cobviously\|basically\|simply\|of\scourse\|clearly\|just\|everyone\sknows\|however,\|so,\|easy/
-"autocmd BufWinLeave * call clearmatches()
-
-" Create a 'scratch buffer' which is a temporary buffer Vim wont ask to save
-" http://vim.wikia.com/wiki/Display_output_of_shell_commands_in_new_window
-command! -complete=shellcmd -nargs=+ Shell call s:RunShellCommand(<q-args>)
-function! s:RunShellCommand(cmdline)
-  echo a:cmdline
-  let expanded_cmdline = a:cmdline
-  for part in split(a:cmdline, ' ')
-    if part[0] =~ '\v[%#<]'
-      let expanded_part = fnameescape(expand(part))
-      let expanded_cmdline = substitute(expanded_cmdline, part, expanded_part, '')
-    endif
-  endfor
-  botright new
-  setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
-  call setline(1, 'You entered:    ' . a:cmdline)
-  call setline(2, 'Expanded Form:  ' .expanded_cmdline)
-  call setline(3,substitute(getline(2),'.','=','g'))
-  execute '$read !'. expanded_cmdline
-  setlocal nomodifiable
-  1
-endfunction
-
-" Close all folds when opening a new buffer
-autocmd BufRead * setlocal foldmethod=marker
-autocmd BufRead * normal zM
-
-" Rainbow parenthesis always on!
-if exists(':RainbowParenthesesToggle')
-  autocmd VimEnter * RainbowParenthesesToggle
-  autocmd Syntax * RainbowParenthesesLoadRound
-  autocmd Syntax * RainbowParenthesesLoadSquare
-  autocmd Syntax * RainbowParenthesesLoadBraces
-endif
-
-" Reset spelling colours when reading a new buffer
-" This works around an issue where the colorscheme is changed by .local.vimrc
-fun! SetSpellingColors()
-  highlight SpellBad cterm=bold ctermfg=white ctermbg=red
-  highlight SpellCap cterm=bold ctermfg=red ctermbg=white
-endfun
-autocmd BufWinEnter * call SetSpellingColors()
-autocmd BufNewFile * call SetSpellingColors()
-autocmd BufRead * call SetSpellingColors()
-autocmd InsertEnter * call SetSpellingColors()
-autocmd InsertLeave * call SetSpellingColors()
-
-" Change colourscheme when diffing
-fun! SetDiffColors()
-  highlight DiffAdd    cterm=bold ctermfg=white ctermbg=DarkGreen
-  highlight DiffDelete cterm=bold ctermfg=white ctermbg=DarkGrey
-  highlight DiffChange cterm=bold ctermfg=white ctermbg=DarkBlue
-  highlight DiffText   cterm=bold ctermfg=white ctermbg=DarkRed
-endfun
-autocmd FilterWritePre * call SetDiffColors()
-" }}}
-
-" colors {{{
-hi Normal ctermbg=black
-hi Search cterm=NONE ctermfg=grey ctermbg=blue
-hi Visual cterm=None ctermfg=255 ctermbg=68
-hi SignColumn ctermbg=black
-" }}}
-
-" vim.wikia stuff {{{
-
-
-" search and replace in all open buffers
-" from " http://vim.wikia.com/wiki/Search_and_replace_in_multiple_buffers
-"
-"  :bufdo %s/pattern/replace/ge | update
-"
-" Explanation
-" bufdo     Apply the following commands to all buffers.
-" %         Search and replace all lines in the buffer.
-" s         Do substitution
-" pattern   Search pattern.
-" replace   Replacement text.
-" g         Change all occurrences in each line (global).
-" e         No error if the pattern is not found.
-" |         Separator between commands.
-" update    Save (write file only if changes were made).
-
-
-" start from http://stackoverflow.com/a/5636941/766921
-" Toggle Vexplore with <leader><leader>
-function! ToggleVExplorer()
-  if exists("t:expl_buf_num")
-      let expl_win_num = bufwinnr(t:expl_buf_num)
-      if expl_win_num != -1
-          let cur_win_nr = winnr()
-          exec expl_win_num . 'wincmd w'
-          close
-          exec cur_win_nr . 'wincmd w'
-          unlet t:expl_buf_num
-      else
-          unlet t:expl_buf_num
-      endif
-  else
-      exec '1wincmd w'
-      25Vexplore
-      let t:expl_buf_num = bufnr("%")
-  endif
-endfunction
-map <silent> <leader><leader> :call ToggleVExplorer()<CR>
-
-
-
-" here is a more exotic version of my original Kwbd script
-""delete the buffer; keep windows; create a scratch buffer if no buffers left
-" SOURCE http://vim.wikia.com/wiki/Deleting_a_buffer_without_closing_the_window
-function s:Kwbd(kwbdStage)
-  if(a:kwbdStage == 1)
-    if(!buflisted(winbufnr(0)))
-      bd!
-      return
-    endif
-    let s:kwbdBufNum = bufnr("%")
-    let s:kwbdWinNum = winnr()
-    windo call s:Kwbd(2)
-    execute s:kwbdWinNum . 'wincmd w'
-    let s:buflistedLeft = 0
-    let s:bufFinalJump = 0
-    let l:nBufs = bufnr("$")
-    let l:i = 1
-    while(l:i <= l:nBufs)
-      if(l:i != s:kwbdBufNum)
-        if(buflisted(l:i))
-          let s:buflistedLeft = s:buflistedLeft + 1
-        else
-          if(bufexists(l:i) && !strlen(bufname(l:i)) && !s:bufFinalJump)
-            let s:bufFinalJump = l:i
-          endif
-        endif
-      endif
-      let l:i = l:i + 1
-    endwhile
-    if(!s:buflistedLeft)
-      if(s:bufFinalJump)
-        windo if(buflisted(winbufnr(0))) | execute "b! " . s:bufFinalJump | endif
-      else
-        enew
-        let l:newBuf = bufnr("%")
-        windo if(buflisted(winbufnr(0))) | execute "b! " . l:newBuf | endif
-      endif
-      execute s:kwbdWinNum . 'wincmd w'
-    endif
-    if(buflisted(s:kwbdBufNum) || s:kwbdBufNum == bufnr("%"))
-      execute "bd! " . s:kwbdBufNum
-    endif
-    if(!s:buflistedLeft)
-      set buflisted
-      set bufhidden=delete
-      set buftype=
-      setlocal noswapfile
-    endif
-  else
-    if(bufnr("%") == s:kwbdBufNum)
-      let prevbufvar = bufnr("#")
-      if(prevbufvar > 0 && buflisted(prevbufvar) && prevbufvar != s:kwbdBufNum)
-        b #
-      else
-        bn
-      endif
-    endif
-  endif
-endfunction
-command! Kwbd call s:Kwbd(1)
-
-" }}}
-
-" my mappings {{{
-nnoremap <leader>f :call QuickfixToggle()<cr>
-nnoremap <leader>w :w!<cr>
-nnoremap <leader>q :q<cr>
-nnoremap <leader>Q :q!<cr>
-nnoremap <leader>x :x<cr>
-
-nnoremap <leader>l :ls<cr>
-"nnoremap <leader>d :bd<cr>
-"nnoremap <leader>d <Plug>Kwbd<cr>
-nnoremap <silent> <leader>d :Kwbd<cr>
-nnoremap <leader>b :bnext<cr>
-nnoremap <leader>n :bprevious<cr>
-nnoremap <leader>c yyp
-nnoremap <leader>e :lnext<cr>
-nnoremap <leader>E :lprev<cr>
-nnoremap <leader>r maywggovar <esc>pa = require('<esc>pa');<esc>`a
-nnoremap <leader>, :cnext<cr>
-nnoremap <leader>. :cprevious<cr>
-
-vnoremap <leader>% :!~/bin/url-encode-decode<cr>
-
-" move around splits
-nnoremap <leader>h <C-W>h
-nnoremap <leader>j <C-W>j
-nnoremap <leader>k <C-W>k
-nnoremap <leader>l <C-W>l
-
-inoremap jk <esc>
-inoremap <esc> <nop>
-
-" }}}
-
-" neocomplete stuff {{{
-" https://gist.github.com/cridenour/74e7635275331d5afa6b " " Disable AutoComplPop.
-" let g:acp_enableAtStartup = 0
-" " Use neocomplete.
-" let g:neocomplete#enable_at_startup = 1
-" " Use smartcase.
-" let g:neocomplete#enable_smart_case = 1
-" " Set minimum syntax keyword length.
-" let g:neocomplete#sources#syntax#min_keyword_length = 3
-
- " Plugin key-mappings.
-" inoremap <expr><C-g>     neocomplete#undo_completion()
-"" inoremap <expr><C-l>     neocomplete#complete_common_string()
-"
-" " Recommended key-mappings.
-" " <CR>: close popup and save indent.
-" function! s:my_cr_function()
-"     return neocomplete#smart_close_popup() . "\<CR>"
-" endfunction
-" "inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
- " <TAB>: completion.
- "0inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
- " <C-h>, <BS>: close popup and delete backword char.
- "0inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
- "0inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
- "0inoremap <expr><C-y>  neocomplete#close_popup()
- "0inoremap <expr><C-e>  neocomplete#cancel_popup()
-
- " }}}
-
-" more Settings {{{
-set scrolloff=7
-set magic
-set lazyredraw
-set nobackup
-set nowb
-set noswapfile
-
-" Specify the behavior when switching between buffers
-"try
-"  set switchbuf=useopen,usetab,newtab
-"  set stal=2
-"catch
-"endtry
-" }}}
-
-" fns {{{
-"TODO
-" add #names for autoloading
 " this function is lifted from Learn Vimscript the Hard Way
 " http://learnvimscriptthehardway.stevelosh.com
-
-let g:quickfix_is_open = 0
-
-function! QuickfixToggle()
-  if g:quickfix_is_open
-    cclose
-    let g:quickfix_is_open = 0
-    execute g:quickfix_return_to_window . "wincmd w"
-  else
-    let g:quickfix_return_to_window = winnr()
-    copen
-    let g:quickfix_is_open = 1
-  endif
-endfunction
-
-
-
-function! FoldColumnToggle()
-  if &foldcolumn
-    setlocal foldcolumn=0
-  else
-    setlocal foldcolumn=4
-  endif
-endfunction
-"nnoremap <leader>z :call FoldColumnToggle()<cr>
-"
-" this function is lifted from Learn Vimscript the Hard Way
-" http://learnvimscriptthehardway.stevelosh.com
-
-nnoremap <leader>g :set operatorfunc=<SID>GrepOperator<cr>g@
-vnoremap <leader>g :<c-u>call <SID>GrepOperator(visualmode())<cr>
-
-function! s:GrepOperator(type)
-  let saved_unnamed_register = @@
-  if a:type ==# 'v'
-    normal! `<v`>y
-  elseif a:type ==# 'char'
-    normal! `[v`]y
-  else
-    return
-  endif
-  echo shellescape(@@)
-  sleep 1
-  silent execute "grep! -R " . shellescape(@@)
-  redraw!
-  copen
-  let @@ = saved_unnamed_register
-endfunction
-
-"" Tab completion
-function! Inserttabwrapper()
-    let col = col('.') - 1
-    if !col || getline('.')[col - 1] !~ '\k'
-        return "\<tab>"
-    else
-        return "\<c-p>"
-    endif
-endfunction
-
-" Map <tab> to Inserttabwarpper()
-inoremap <tab> <c-r>=Inserttabwrapper()<cr>
+"nnoremap <leader>g :set operatorfunc=<SID>GrepOperator<cr>g@
+"vnoremap <leader>g :<c-u>call <SID>GrepOperator(visualmode())<cr>
 
 " Shift tab to backwards search
 inoremap <s-tab> <c-n>
@@ -765,62 +236,133 @@ nnoremap ^ 0
 map k gk
 map j gj
 
+nnoremap ; :
+
+iabbrev adn and
+iabbrev tehn then
+iabbrev teh the
+iabbrev waht what
+iabbrev woh who
+
+iabbrev cxl console.log(
+iabbrev mxp 'use strict';<CR><CR>module.exports =
+iabbrev fxn function (){<CR><CR>}<Up><Up><Right><Right><Right><Right><Right><Right><Right>
+iabbrev hxl <!DOCTYPE html><cr><html><cr><head><cr><meta charset="utf8"/><cr><title>title</title><cr></head><cr><body><cr><cr></body><cr></html>
+
+" Command to use sudo when needed
+cmap w!! %!sudo tee > /dev/null %
+
+" visually select, then url encode or decode.
+vnoremap <leader>% :!~/bin/url-encode-decode<cr>
+vnoremap <leader>5 :!base64<cr>
+nnoremap <leader>w :w!<cr>
+nnoremap <leader>q :q<cr>
+nnoremap <leader>Q :q!<cr>
+nnoremap <leader>x :x<cr>
+nnoremap <leader>l :ls<cr>
+nnoremap <leader>, :bnext<cr>
+nnoremap <leader>. :bprevious<cr>
+nnoremap <leader>e :lnext<cr>
+nnoremap <leader>E :lprev<cr>
+nnoremap <leader>b :cnext<cr>
+nnoremap <leader>n :cprevious<cr>
+
+inoremap <A-Left> :tabnext<cr>
+inoremap <A-Right> :tabprevious<cr>
+nnoremap <A-Left> :tabnext<cr>
+nnoremap <A-Right> :tabprevious<cr>
+
+tnoremap <A-Left> <c-\><c-n>:tabnext<cr>
+tnoremap <A-Right> <c-\><c-n>:tabprevious<cr>
+
+" code snippets
+nnoremap <leader>r maywggovar <esc>pa = require('<esc>pa');<esc>`a
+nnoremap <leader>f yiwjOfor(var i=0,<esc>paI;i<<esc>pa.length;i++){<cr><tab><esc>paI = <esc>pa[i];<cr>}<cr>
+
+
+nnoremap <C-h> <c-w>h
+nnoremap <C-j> <c-w>j
+nnoremap <C-k> <c-w>k
+nnoremap <C-l> <c-w>l
+
+tnoremap <C-h> <c-w>h
+tnoremap <C-j> <c-w>j
+tnoremap <C-k> <c-w>k
+tnoremap <C-l> <c-w>l
+
+inoremap jk <esc>
+inoremap <esc> <nop>
+
+cnoremap Bd bd
+cnoremap BD bd
+
+" from junegunn/fzf.vim, better ctrlp plugin
+nnoremap <C-p> :Files<cr>
+
 " Toggle paste mode on and off
 map <leader>pp :setlocal paste!<cr>
-
-" Disable paste mode when leaving insert mode
-autocmd InsertLeave * set nopaste
-
-" Turn backup off
-set noswapfile
-set nobackup
-set nowritebackup
-
-" Keep undo history across sessions, by storing in file.
-silent !mkdir ~/.vim/backups > /dev/null 2>&1
-set undodir=~/.vim/backups
-set undofile
-
-
-" Will insert tab at beginning of line, will use completion if not at beginning
-set wildmode=list:longest,list:full
-
-" Stuff to ignore when tab completing
-set wildignore=*.o,*.obj,*~,*.pyc
-set wildignore+=*/.git/*,*/.hg/*,*/.svn/*.
-set wildignore+=*vim/backups*
-set wildignore+=*DS_Store*
-set wildignore+=*.png,*.jpg,*.gif
-set wildignore+=*/dist/*
-
-" from http://vim.wikia.com/wiki/HTML_entities
-" Escape/unescape & < > HTML entities in range (default current line).
-function! HtmlEntities(line1, line2, action)
-  let search = @/
-  let range = 'silent ' . a:line1 . ',' . a:line2
-  if a:action == 0  " must convert &amp; last
-    execute range . 'sno/&lt;/</eg'
-    execute range . 'sno/&gt;/>/eg'
-    execute range . 'sno/&amp;/&/eg'
-  else              " must convert & first
-    execute range . 'sno/&/&amp;/eg'
-    execute range . 'sno/</&lt;/eg'
-    execute range . 'sno/>/&gt;/eg'
-  endif
-  nohl
-  let @/ = search
-endfunction
-command! -range Htmldecode call HtmlEntities(<line1>, <line2>, 0)
-command! -range Htmlencode call HtmlEntities(<line1>, <line2>, 1)
-"noremap <silent> <leader>h :Entities 0<CR>
-vnoremap <leader>z <C-v>G:s/(Map it) //<cr>gv:s/.*)/-/<cr>:s/  / /g<cr>
-
-nnoremap <leader>m <C-a>h
-
-"}}}
-
-" Macros {{{
-" format crime map section
-let @z='^dt xjdt)j.j.jj.kddkkkr-Vjj~wwdw~w.^jw~jjjjj'
-"
 " }}}
+
+" macros {{{
+""let @w='jddjjI- jkwlv$~Vjj:s/\(BLOCK\|@\)//wwwwwwwwwvw~k$^wwlve~wlve~jkjji<br>jk'
+let @w='^dt xjdt)j.j.jj.kddkkkr-Vjj~wwdw~w.^jw~jjjjj'
+" }}}
+
+" filetypes {{{
+" specify syntax highlighting for specific files
+autocmd Bufread,BufNewFile *.sbt set filetype=scala
+autocmd Bufread,BufNewFile *.spv set filetype=php
+autocmd Bufread,BufNewFile *.md set filetype=markdown " Vim interprets .md as 'modula2' otherwise, see :set filetype?
+" }}}
+
+" themes and colors {{{
+colorscheme jellybeans
+let g:airline_theme='base16'
+highlight Normal ctermbg=black
+highlight Search cterm=NONE ctermfg=grey ctermbg=blue
+highlight Visual cterm=None ctermfg=255 ctermbg=68 guifg=white guibg=SeaGreen
+highlight SignColumn ctermbg=black
+" }}}
+
+" fix gf for javascript/typescript {{{
+autocmd FileType javascript setlocal suffixesadd+=.js,.json,.ts,.tsx
+autocmd FileType javascript setlocal path+=.,node_modules
+
+""
+"" function! LoadMainNodeModule(fname)
+""     let nodeModules = "./node_modules/"
+""     let packageJsonPath = nodeModules . a:fname . "/package.json"
+""
+""     if filereadable(packageJsonPath)
+""         return nodeModules . a:fname . "/" . json_decode(join(readfile(packageJsonPath))).main
+""     else
+""         return nodeModules . a:fname
+""     endif
+"" endfunction
+
+"autocmd FileType javascript setlocal includeexpr=LoadMainNodeModule(v:fname)
+" }}}
+
+" folds {{{
+" TODO not sure if i like this ...
+autocmd BufEnter * setlocal foldmethod=syntax
+autocmd BufEnter * setlocal foldlevel=4
+
+" ...but i do like this for now, 
+" open markdown files folded at level 2 
+function MarkdownLevel()
+	let h = matchstr(getline(v:lnum), '^#\+')
+	if empty(h)
+		return "="
+	else
+		return ">" . len(h)
+	endif
+endfunction
+autocmd BufEnter *.md setlocal foldexpr=MarkdownLevel()
+autocmd BufEnter *.md setlocal foldmethod=expr
+autocmd BufEnter *.md setlocal foldlevel=2
+
+autocmd BufEnter .vimrc setlocal foldmethod=marker
+autocmd BufEnter .vimrc setlocal foldlevel=0
+" }}}
+
